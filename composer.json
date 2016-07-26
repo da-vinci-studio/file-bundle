@@ -1,0 +1,29 @@
+{
+  "name": "da-vinci-studio/file-bundle",
+  "description": "File Bundle",
+  "type": "symfony-bundle",
+  "require": {
+    "league/flysystem": "~1.0",
+    "oneup/flysystem-bundle": "^1.4",
+    "da-vinci-studio/uuid-generator": "~0.1.0",
+    "da-vinci-studio/path-generator": "~0.1.0"
+  },
+  "require-dev": {
+    "phpspec/phpspec": "^2.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dvs\\FileBundle\\": "src"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/da-vinci-studio/path-generator.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/da-vinci-studio/uuid-generator.git"
+    }
+  ]
+}

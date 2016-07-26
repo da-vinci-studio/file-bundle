@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <imports>
+        <import resource="adapters.xml"/>
+        <import resource="factories.xml"/>
+    </imports>
+
+    <parameters>
+        <parameter key="oneup_flysystem.filesystem.class">League\Flysystem\Filesystem</parameter>
+        <parameter key="oneup_flysystem.filesystem.adapter.local.class">League\Flysystem\Adapter\Local</parameter>
+
+        <parameter key="dvs.file.file_system.class">Dvs\FileBundle\FileSystem</parameter>
+    </parameters>
+
+    <services>
+        <service id="oneup_flysystem.filesystem.abstract" class="%oneup_flysystem.filesystem.class%" abstract="true" public="true">
+            <argument /><!-- Adapter -->
+            <argument /><!-- Config -->
+        </service>
+
+        <service id="oneup_flysystem.adapter.local.abstract" class="%oneup_flysystem.filesystem.adapter.local.class%" abstract="true" public="false">
+            <argument /><!-- Directory -->
+            <argument /><!-- WriteFlags -->
+            <argument /><!-- LinkHandling -->
+        </service>
+
+        <service id="dvs.file.file_system" class="%dvs.file.file_system.class%" abstract="true" public="false">
+            <argument /><!-- Adapter -->
+        </service>
+
+        <service id="dvs.uuid_generator" class="Dvs\UUIDGenerator\Adapter\RamseyUUID" />
+        <service id="dvs.path_generator" class="Dvs\PathGenerator\PathGenerator" />
+
+        <service id="dvs.naming_strategy" class="Dvs\FileBundle\Storage\Naming\DefaultNamingStrategy">
+            <argument type="service" id="dvs.uuid_generator" />
+        </service>
+
+        <service id="dvs.file_path_strategy" class="Dvs\FileBundle\Storage\PathGenerating\DefaultFilePathStrategy">
+            <argument type="service" id="dvs.path_generator" />
+            <argument type="string">%document_upload_dir%</argument>
+        </service>
+
+        <service id="dvs.file_receiver" class="Dvs\FileBundle\Storage\FileReceiver">
+            <argument type="service" id="dvs.naming_strategy" />
+            <argument type="service" id="dvs.file_path_strategy" />
+            <argument type="service" id="dvs.file.pp_standard.filesystem" />
+        </service>
+    </services>
+</container>
